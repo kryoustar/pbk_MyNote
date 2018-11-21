@@ -1,0 +1,84 @@
+package softeng;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Scanner;
+
+public class MovieTest {
+   public static String movieP() {
+      return "1.영화 정보 입력/2.영화 출력/3.영화 검색/4.파일 저장/5.파일 열기/6.종료\n메뉴입력>>";
+   }
+
+   public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException {
+      // TODO Auto-generated method stub
+      Scanner s = new Scanner(System.in);
+      HashMap<String,Movie> map = new HashMap<String,Movie>();
+      while(true) {
+         System.out.print(movieP());
+         String menu = s.nextLine();
+         if (menu.equals("1")) {
+            
+            System.out.print("제목 : ");
+            String temp1 = s.nextLine();
+            
+            //수정 필요
+            if(map.containsKey(temp1)) {
+               System.out.println(temp1+"은/는 이미 존재 합니다.");
+               continue;
+            }
+            else {
+            System.out.print("감독 : ");
+            String temp2 = s.nextLine();
+            System.out.print("장르 : ");
+            String temp3 = s.nextLine();
+            System.out.print("년도 : ");
+            String temp4 = s.nextLine();
+            int temp5 = Integer.parseInt(temp4);
+            Movie temp = new Movie(temp1, temp2, temp3, temp5);
+            map.put(temp1, temp);
+            }
+            
+         }
+         if(menu.equals("2")) {
+            Iterator<String> keys = map.keySet().iterator();
+            while ( keys.hasNext()) {
+               String key = keys.next();
+               System.out.println("["+map.get(key).getName()+map.get(key).getDir()+map.get(key).getGenre()+map.get(key).getYear()+"]");
+            }
+         }
+         if (menu.equals("3")  ) {
+            if (map.size() == 0){
+               System.out.println("영화가 없습니다. "); 
+               continue;
+               }
+            System.out.print("검색 제목 입력 : ");
+            String key = s.nextLine();
+            if(map.containsKey(key)) {
+               System.out.println("["+map.get(key).getName()+map.get(key).getDir()+map.get(key).getGenre()+map.get(key).getYear()+"]");
+            }
+            else {
+               System.out.print(key+"은/는 없습니다.");
+            }
+         }
+         if (menu.equals("4")) { // 파일 저장
+            ObjectOutputStream ois = new ObjectOutputStream(new FileOutputStream("movie.dat"));
+            ois.writeObject(map);
+            System.out.println("movie.dat 에 저장되었습니다.");
+            ois.close();
+         }
+         if (menu.equals("5")) { // 파일열기
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("movie.dat"));
+            map = (HashMap<String, Movie>) ois.readObject();
+            System.out.println("movie.dat 로부터 정보를 불러왔습니다. ");
+            ois.close();
+         }
+         if (menu.equals("6")) {
+            s.close();
+            break;
+            }
+         
+      }
+   }
+
+}
